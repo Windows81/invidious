@@ -47,19 +47,19 @@ module I18next::Plurals
 
   private PLURAL_SETS = {
     PluralForms::Single_gt_one => [
-      "ach", "ak", "am", "arn", "br", "fil", "gun", "ln", "mfe", "mg",
-      "mi", "oc", "pt", "tg", "tl", "ti", "tr", "uz", "wa",
+      "ach", "ak", "am", "arn", "br", "fa", "fil", "gun", "ln", "mfe", "mg",
+      "mi", "oc", "pt-PT", "tg", "tl", "ti", "tr", "uz", "wa",
     ],
     PluralForms::Single_not_one => [
       "af", "an", "ast", "az", "bg", "bn", "ca", "da", "de", "dev", "el", "en",
-      "eo", "es", "et", "eu", "fi", "fo", "fur", "fy", "gl", "gu", "ha", "hi",
+      "eo", "et", "eu", "fi", "fo", "fur", "fy", "gl", "gu", "ha", "hi",
       "hu", "hy", "ia", "kk", "kn", "ku", "lb", "mai", "ml", "mn", "mr",
       "nah", "nap", "nb", "ne", "nl", "nn", "no", "nso", "pa", "pap", "pms",
       "ps", "rm", "sco", "se", "si", "so", "son", "sq", "sv", "sw",
       "ta", "te", "tk", "ur", "yo",
     ],
     PluralForms::None => [
-      "ay", "bo", "cgg", "fa", "ht", "id", "ja", "jbo", "ka", "km", "ko", "ky",
+      "ay", "bo", "cgg", "ht", "id", "ja", "jbo", "ka", "km", "ko", "ky",
       "lo", "ms", "sah", "su", "th", "tt", "ug", "vi", "wo", "zh",
     ],
     PluralForms::Dual_Slavic => [
@@ -90,11 +90,12 @@ module I18next::Plurals
     "sk"  => PluralForms::Special_Czech_Slovak,
     "sl"  => PluralForms::Special_Slovenian,
     # Mixed v3/v4 rules
-    "fr"    => PluralForms::Special_French_Portuguese,
-    "hr"    => PluralForms::Special_Hungarian_Serbian,
-    "it"    => PluralForms::Special_Spanish_Italian,
-    "pt-BR" => PluralForms::Special_French_Portuguese,
-    "sr"    => PluralForms::Special_Hungarian_Serbian,
+    "es" => PluralForms::Special_Spanish_Italian,
+    "fr" => PluralForms::Special_French_Portuguese,
+    "hr" => PluralForms::Special_Hungarian_Serbian,
+    "it" => PluralForms::Special_Spanish_Italian,
+    "pt" => PluralForms::Special_French_Portuguese,
+    "sr" => PluralForms::Special_Hungarian_Serbian,
   }
 
   # These are the v1 and v2 compatible suffixes.
@@ -165,7 +166,7 @@ module I18next::Plurals
 
     def get_plural_form(locale : String) : PluralForms
       # Extract the ISO 639-1 or 639-2 code from an RFC 5646 language code
-      if !locale.matches?(/^pt-BR$/)
+      if !locale.matches?(/^pt-PT$/)
         locale = locale.split('-')[0]
       end
 
@@ -187,7 +188,7 @@ module I18next::Plurals
 
     # Emulate the `rule.numbers.size == 2 && rule.numbers[0] == 1` check
     # from original i18next code
-    private def is_simple_plural(form : PluralForms) : Bool
+    private def simple_plural?(form : PluralForms) : Bool
       case form
       when .single_gt_one?      then return true
       when .single_not_one?     then return true
@@ -209,7 +210,7 @@ module I18next::Plurals
       idx = SuffixIndex.get_index(plural_form, count)
 
       # Simple plurals are handled differently in all versions (but v4)
-      if @simplify_plural_suffix && is_simple_plural(plural_form)
+      if @simplify_plural_suffix && simple_plural?(plural_form)
         return (idx == 1) ? "_plural" : ""
       end
 
@@ -260,9 +261,9 @@ module I18next::Plurals
       when .special_hebrew?           then return special_hebrew(count)
       when .special_odia?             then return special_odia(count)
         # Mixed v3/v4 forms
-      when .special_spanish_italian?   then return special_cldr_Spanish_Italian(count)
-      when .special_french_portuguese? then return special_cldr_French_Portuguese(count)
-      when .special_hungarian_serbian? then return special_cldr_Hungarian_Serbian(count)
+      when .special_spanish_italian?   then return special_cldr_spanish_italian(count)
+      when .special_french_portuguese? then return special_cldr_french_portuguese(count)
+      when .special_hungarian_serbian? then return special_cldr_hungarian_serbian(count)
       else
         # default, if nothing matched above
         return 0_u8
@@ -533,7 +534,7 @@ module I18next::Plurals
     #
     # This rule is mostly compliant to CLDR v42
     #
-    def self.special_cldr_Spanish_Italian(count : Int) : UInt8
+    def self.special_cldr_spanish_italian(count : Int) : UInt8
       return 0_u8 if (count == 1)                           # one
       return 1_u8 if (count != 0 && count % 1_000_000 == 0) # many
       return 2_u8                                           # other
@@ -543,7 +544,7 @@ module I18next::Plurals
     #
     # This rule is mostly compliant to CLDR v42
     #
-    def self.special_cldr_French_Portuguese(count : Int) : UInt8
+    def self.special_cldr_french_portuguese(count : Int) : UInt8
       return 0_u8 if (count == 0 || count == 1) # one
       return 1_u8 if (count % 1_000_000 == 0)   # many
       return 2_u8                               # other
@@ -553,7 +554,7 @@ module I18next::Plurals
     #
     # This rule is mostly compliant to CLDR v42
     #
-    def self.special_cldr_Hungarian_Serbian(count : Int) : UInt8
+    def self.special_cldr_hungarian_serbian(count : Int) : UInt8
       n_mod_10 = count % 10
       n_mod_100 = count % 100
 

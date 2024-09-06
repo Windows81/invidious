@@ -13,6 +13,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  margin: auto;
 }
 
 .h-box {
@@ -197,6 +198,7 @@ img.thumbnail {
   display: block; /* See: https://stackoverflow.com/a/11635197 */
   width: 100%;
   object-fit: cover;
+  aspect-ratio: 16 / 9;
 }
 
 .thumbnail-placeholder {
@@ -276,7 +278,14 @@ div.thumbnail > .bottom-right-overlay {
   display: inline;
 }
 
-.searchbar .pure-form fieldset { padding: 0; }
+.searchbar .pure-form {
+  display: flex;
+}
+
+.searchbar .pure-form fieldset {
+  padding: 0;
+  flex: 1;
+}
 
 .searchbar input[type="search"] {
 	width: 100%;
@@ -306,6 +315,16 @@ input[type="search"]::-webkit-search-cancel-button {
   width: 14px;
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAn0lEQVR42u3UMQrDMBBEUZ9WfQqDmm22EaTyjRMHAlM5K+Y7lb0wnUZPIKHlnutOa+25Z4D++MRBX98MD1V/trSppLKHqj9TTBWKcoUqffbUcbBBEhTjBOV4ja4l4OIAZThEOV6jHO8ARXD+gPPvKMABinGOrnu6gTNUawrcQKNCAQ7QeTxORzle3+sDfjJpPCqhJh7GixZq4rHcc9l5A9qZ+WeBhgEuAAAAAElFTkSuQmCC);
   background-size: 14px;
+}
+
+.searchbar #searchbutton {
+  border: none;
+  background: none;
+  margin-top: 0;
+}
+
+.searchbar #searchbutton:hover {
+  color: rgb(0, 182, 240);
 }
 
 .user-field {
@@ -441,16 +460,26 @@ p.video-data   { margin: 0; font-weight: bold; font-size: 80%; }
  */
 
 footer {
-  color: #919191;
   margin-top: auto;
   padding: 1.5em 0;
   text-align: center;
   max-height: 30vh;
 }
 
-footer a {
-  color: #919191 !important;
-  text-decoration: underline;
+.light-theme footer {
+  color: #7c7c7c;
+}
+
+.dark-theme footer {
+  color: #adadad;
+}
+
+.light-theme footer a {
+  color: #7c7c7c !important;
+}
+
+.dark-theme footer a {
+  color: #adadad !important;
 }
 
 footer span {
@@ -556,6 +585,14 @@ span > select {
     color: #303030;
   }
 
+  .no-theme footer {
+    color: #7c7c7c;
+  }
+
+  .no-theme footer a {
+    color: #7c7c7c !important;
+  }
+
   .light-theme .pure-menu-heading {
     color: #565d64;
   }
@@ -589,7 +626,7 @@ span > select {
 }
 
 .dark-theme a {
-  color: #a0a0a0;
+  color: #adadad;
   text-decoration: none;
 }
 
@@ -643,7 +680,7 @@ body.dark-theme {
   }
 
   .no-theme a {
-    color: #a0a0a0;
+    color: #adadad;
     text-decoration: none;
   }
 
@@ -673,6 +710,14 @@ body.dark-theme {
   .no-theme .searchbar input {
     background-color: inherit;
     color: inherit;
+  }
+
+  .no-theme footer {
+    color: #adadad;
+  }
+
+  .no-theme footer a {
+    color: #adadad !important;
   }
 }
 
@@ -766,4 +811,8 @@ h1, h2, h3, h4, h5, p,
 
 .channel-emoji {
   margin: 0 2px;
+}
+
+#download_widget {
+    width: 100%;
 }
